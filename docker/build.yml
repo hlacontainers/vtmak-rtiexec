@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+ ma-exec:
+  build:
+   context: context
+   dockerfile: Dockerfile
+   args:
+   - VERSION=${VERSION}
+  image: ${REPOSITORY}vtmak-rtiexec:${VERSION}
+  
