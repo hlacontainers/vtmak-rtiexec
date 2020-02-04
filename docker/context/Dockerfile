@@ -43,8 +43,8 @@ RUN dbus-uuidgen > /var/lib/dbus/machine-id
 
 # Package net-tools is optional.
 RUN yum install -y \
-    mesa-libGLU \
-    libicu \
+	mesa-libGLU \
+	libicu \
 	xorg-x11-server-utils \
 	xkeyboard-config \
 	qt5-qtbase-devel \
