@@ -3,6 +3,9 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
+# Set default for build-time ARGs
+ARG VTMAK_VERSION=4.5
+
 ########################
 # Create base image with data
 ########################
