@@ -6,6 +6,6 @@ services:
    context: context
    dockerfile: Dockerfile
    args:
-   - VERSION=${VERSION}
-  image: ${REPOSITORY}vtmak-rtiexec:${VERSION}
+   - VTMAK_VERSION=${VTMAK_VERSION}
+  image: ${REPOSITORY}vtmak-rtiexec:${VTMAK_VERSION}
   

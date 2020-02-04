@@ -8,13 +8,13 @@
 ########################
 FROM centos:7 AS base
 
-ARG VERSION
+ARG VTMAK_VERSION
 
 # The MaK RTI files are installed here
-ENV RTI_HOME=/usr/local/makRti${VERSION}
+ENV RTI_HOME=/usr/local/makRti${VTMAK_VERSION}
 
 # Install Mak RTI
-ADD ./makRti${VERSION}-linux64-rhe7.tar.gz /usr/local
+ADD ./makRti${VTMAK_VERSION}-linux64-rhe7.tar.gz /usr/local
 
 # Brute force, remove non-working Qt libs
 RUN rm -rf ${RTI_HOME}/lib/gui/libQ*
@@ -28,7 +28,7 @@ RUN touch ${RTI_HOME}/rid.mtl
 ########################
 FROM centos:7
 
-ARG VERSION
+ARG VTMAK_VERSION
 
 # Workaround issue with DBUS
 RUN dbus-uuidgen > /var/lib/dbus/machine-id
@@ -53,7 +53,7 @@ RUN yum install -y \
 RUN easy_install supervisor
 
 # The MaK RTI files are installed here
-ENV RTI_HOME=/usr/local/makRti${VERSION}
+ENV RTI_HOME=/usr/local/makRti${VTMAK_VERSION}
 
 # Copy relevant files from base (also copy the include dir for derived LRC image)
 COPY --from=base $RTI_HOME/bin/		$RTI_HOME/bin/
