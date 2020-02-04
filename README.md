@@ -90,5 +90,5 @@ So, check the UI for these messages and close them.
 
 ## Provide an alternate VTMaK RID file
 
-The environment variables listed above are for a small number of VTMaK RTI Exec and Forwarder settings. To change the entire RID file, just mount an alternate, but identically named RID file at `/usr/local/makRti${VERSION}/rid.mtl` or use the environment variable `MAK_RTI_RID_FILE` to specify another location.
+The environment variables listed above are for a small number of VTMaK RTI Executive and Forwarder settings. To change the entire RID file, just mount an alternate, but identically named RID file at `/usr/local/makRti${VERSION}/rid.mtl` or use the environment variable `MAK_RTI_RID_FILE` to specify another location.
 
