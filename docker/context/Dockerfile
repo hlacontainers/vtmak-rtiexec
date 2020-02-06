@@ -22,7 +22,7 @@ ADD ./makRti${VTMAK_VERSION}-linux64-rhe7.tar.gz /usr/local
 # Brute force, remove non-working Qt libs
 RUN rm -rf ${RTI_HOME}/lib/gui/libQ*
 
-# Ensure at least directories and setting files are created in case we use a placefolder install file
+# Ensure there is a skeleton structure
 RUN mkdir -p ${RTI_HOME}/bin ${RTI_HOME}/lib ${RTI_HOME}/data ${RTI_HOME}/include
 RUN touch ${RTI_HOME}/rid.mtl
 
