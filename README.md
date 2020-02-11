@@ -1,9 +1,16 @@
 # VTMaK RTI Executive image
-This repository contains the files and instructions to build and run a Docker container image for the VT MaK RTI Executive (rtiexec). **This repository does not include any VTMaK files**. The VTMaK RTI installer and license keys must be acquired from the vendor. A free version of the VTMaK RTI for two federates can be downloaded from the vendor website. For more information about the VTMaK RTI, see https://www.mak.com.
+The VTMaK RTI Executive (rtiexec) is an application that manages one or more federation executions within the VTMaK RTI. For example, it keeps track of joined federates and maintains information about the publication and subscription interests of individual federates. The RTI Executive is a required application when using the VTMaK RTI.
 
-For the instructions to build the VTMaK RTI Executive container image see [BUILDME](BUILDME.md).
+This repository contains the files and instructions to build and run a Docker container image for the VT MaK RTI Executive. **This repository does not include any VTMaK files**. The VTMaK RTI installer and license keys must be acquired from the vendor. A free version of the VTMaK RTI for two federates can be downloaded from the vendor website. For more information about the VTMaK RTI, see https://www.mak.com.
 
-The simplest way to start the VTMaK RTI Executive container is with the following `docker-compose.yml` file:
+By default a **skeleton** Docker container image is built from the files in this repository. A skeleton container image does not include any VTMaK proprietary files. These files must be mounted into the RTI Executive container at run-time in order to create a functional RTI Executive container.
+
+For the instructions to build a skeleton or a complete VTMaK RTI Executive container image see [BUILDME](BUILDME.md).
+
+The simplest way to start the VTMaK RTI Executive container is with the following `docker-compose.yml` file, with the following assumptions:
+
+- The VTMaK RTI Executive container image is skeleton image. 
+- The VTMaK RTI is installed on the host file system under the directory `${RTI_HOME}`.
 
 ````
 version: '3'
@@ -14,8 +21,12 @@ services:
   ports:
   - "8080:8080"
  
+# Make sure to delete the Qt files from ${RTI_HOME}/lib/gui (see Dockerfile)
+
  rtiexec:
   image: ${REPOSITORY}vtmak-rtiexec:${VTMAK_VERSION}
+  volumes:
+  - ${RTI_HOME}:/usr/local/makRti${VTMAK_VERSION}
   environment:
   - DISPLAY=${DISPLAY}
   ports:
@@ -34,13 +45,18 @@ VTMAK_VERSION=4.5
 
 # X DISPLAY for the RTI Exec (required when using the RTI Assistant)
 DISPLAY=xserver:0
+
+# Example of installation directory of the VTMaK RTI (for mount example)
+RTI_HOME=/usr/local/makRti4.5
 ````
 
-The environment file should be used to tailor the composition to the local infrastructure, such as the address of the X Server.
+The environment file should be used to tailor the composition to the local infrastructure, such as the address of the X Server, or the installation directory of the VTMaK RTI,
 
 Port 4000 is the default port on which the RTI Executive listens and port 5000 is the default port on which the Forwarder listens for connection requests from a Local RTI Component (LRC).
 
 By default the RTI Assistant is enabled. Therefore an X Display is required.
+
+Also note the text about the Qt files under `${RTI_HOME}/lib/gui`. The Qt files shipped with the RTI do work in the container image. As work-around the Qt files must be removed in order to force the RTI Executive to use the latest Qt version that is installed in the container image. More information can be found in the build instructions and Dockerfile.
 
 ## Container synopsis
 
@@ -80,13 +96,13 @@ The RTI RID file used by the RTI Executive has the following default settings:
 
 - The RID file is configured to let the RTI Executive perform licensing (``RTI_rtiExecPerformsLicensing `` is set to ``1``).
 
-Note that all settings for each individual federate application must correspond with the RTI Executive RID file setting. This is the case if the LRC image is used.
+Note that all settings for each individual federate application must be compatible with the RTI Executive RID file setting. This is the case if the LRC image is used.
 
 ## RTI Assistant and RTI licenses
 
 If the RTI Assistant is used and there are no RTI licenses configured for the RTI Executive, a license error is displayed by the RTI Assistant, blocking the Forwarder from starting. Only when the error popup windows are closed the Forwarder is started and an LRC can connect.
 
-So, check the UI for these messages and close them.
+So, check the X Display UI for these messages and close them.
 
 ## Provide an alternate VTMaK RID file
 
