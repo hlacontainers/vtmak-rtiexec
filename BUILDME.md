@@ -8,6 +8,8 @@ In the second case only a skeleton directory structure and some necessary (but e
 
 Both options are described below.
 
+Tested VTMaK RTI versions: `4.5`, `4.5f`.
+
 ## Build RTI Executive image with the VTMaK RTI installer
 
 Perform the following steps to build the VTMaK RTI Executive image with the RTI installer from VTMaK.
