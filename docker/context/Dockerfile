@@ -4,7 +4,7 @@
 #
 
 # Set default for build-time ARGs
-ARG VTMAK_VERSION=4.5
+ARG VTMAK_VERSION=skeleton
 
 ########################
 # Create base image with data
@@ -41,7 +41,6 @@ RUN dbus-uuidgen > /var/lib/dbus/machine-id
 # As workaround we use the lastest Qt-base development, with other packages we need.
 # However, no guarentees this will work fully.
 
-# Package net-tools is optional.
 RUN yum install -y \
 	mesa-libGLU \
 	libicu \
@@ -50,20 +49,21 @@ RUN yum install -y \
 	qt5-qtbase-devel \
 	qt5-qtimageformats \
 	qt5-qtsvg \
-	net-tools \
+	nc iproute \
 	python-setuptools
 	
 RUN easy_install supervisor
 
 # The MaK RTI files are installed here
-ENV RTI_HOME=/usr/local/makRti${VTMAK_VERSION}
+ARG RTI_HOME_FROM=/usr/local/makRti${VTMAK_VERSION}
+ENV RTI_HOME=/usr/local/makRti
 
 # Copy relevant files from base (also copy the include dir for derived LRC image)
-COPY --from=base $RTI_HOME/bin/		$RTI_HOME/bin/
-COPY --from=base $RTI_HOME/lib/		$RTI_HOME/lib/
-COPY --from=base $RTI_HOME/data/	$RTI_HOME/data/
-COPY --from=base $RTI_HOME/include/	$RTI_HOME/include/
-COPY --from=base $RTI_HOME/rid.mtl	$RTI_HOME/rid.mtl
+COPY --from=base $RTI_HOME_FROM/bin/		$RTI_HOME/bin/
+COPY --from=base $RTI_HOME_FROM/lib/		$RTI_HOME/lib/
+COPY --from=base $RTI_HOME_FROM/data/		$RTI_HOME/data/
+COPY --from=base $RTI_HOME_FROM/include/	$RTI_HOME/include/
+COPY --from=base $RTI_HOME_FROM/rid.mtl		$RTI_HOME/rid.mtl
 
 # Set library path in case we want to start the rtiexec from the assistant
 ENV LD_LIBRARY_PATH=${RTI_HOME}/lib

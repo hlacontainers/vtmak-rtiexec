@@ -7,6 +7,55 @@
 
 # This script starts the MAK RTI EXEC
 
+WaitForHostPort() {
+	_NAME=$1
+	_HOST=$2
+	_PORT=$3
+
+	down=1
+	while [ $down -ne 0 ]; do
+		echo "CRC: Wait for $_NAME at $_HOST:$_PORT"
+
+		# Check if the port is open; use the -z option to just scan and not connect
+		down=`nc -z $_HOST $_PORT < /dev/null > /dev/null; echo $?`
+
+		# Sleep for the next attempt
+		sleep 1
+	done
+	echo "CRC: $_NAME $_HOST:$_PORT is up"
+}
+
+WaitForXServer() {
+	#split address
+	_OLDIFS=$IFS
+	IFS=:
+	set -- $1
+	XHOST=$1
+	XDISPLAY_SCREEN=$2
+	IFS=.
+	set -- $XDISPLAY_SCREEN
+	XDISPLAY=$1
+	XSCREEN=$2
+	IFS=$_OLDIFS
+
+	if [ "$XHOST" = "" ]; then
+		echo "CRC: no host or display set in '$DISPLAY' (ignored)"
+		return
+	fi
+	
+	if [ "$XDISPLAY" = "" ]; then
+		echo "CRC: DISPLAY number is not set, assume 0"
+		XDISPLAY=0
+	fi
+	
+	#Update display
+	DISPLAY=${XHOST}:${XDISPLAY}
+
+	XPORT=`expr $XDISPLAY + 6000`
+		
+	WaitForHostPort "XServer" $XHOST $XPORT
+}
+
 # Set defaults
 X=${MAK_RTI_CONFIGURE_CONNECTION_WITH_RID:=1}
 X=${MAK_RTI_USE_RTI_EXEC:=1}
@@ -99,5 +148,12 @@ if [ -n "$MAK_RTI_RTIEXEC_LOG_FILE_NAME" ]; then
 	sed -i "s:.*(setqb RTI_rtiExecLogFileName.*):(setqb RTI_rtiExecLogFileName \"$MAK_RTI_RTIEXEC_LOG_FILE_NAME\"):" $RTI_RID_FILE
 fi
 
+if [ -n "$DISPLAY" ]; then
+	WaitForXServer $DISPLAY
+fi
+
+echo "CRC: start"
+
+# Start process
 cd $RTI_HOME/bin
 ./rtiexec $@

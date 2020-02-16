@@ -7,10 +7,10 @@ By default a **skeleton** Docker container image is built from the files in this
 
 For the instructions to build a skeleton or a complete VTMaK RTI Executive container image see [BUILDME](BUILDME.md).
 
-The simplest way to start the VTMaK RTI Executive container is with the following `docker-compose.yml` file, with the following assumptions:
+The simplest way to start the VTMaK RTI Executive container is with the following `docker-compose.yml` file,  where in this example:
 
-- The VTMaK RTI Executive container image is skeleton image. 
-- The VTMaK RTI is installed on the host file system under the directory `${RTI_HOME}`.
+- The VTMaK RTI Executive container image is a skeleton image. 
+- The VTMaK RTI is installed on the host file system under the directory `${VTMAK_RTI_HOME}`.
 
 ````
 version: '3'
@@ -21,12 +21,12 @@ services:
   ports:
   - "8080:8080"
  
-# Make sure to delete the Qt files from ${RTI_HOME}/lib/gui (see Dockerfile)
+# Make sure to delete the Qt files from ${VTMAK_RTI_HOME}/lib/gui (see Dockerfile)
 
  rtiexec:
   image: ${REPOSITORY}vtmak-rtiexec:${VTMAK_VERSION}
   volumes:
-  - ${RTI_HOME}:/usr/local/makRti${VTMAK_VERSION}
+  - ${VTMAK_RTI_HOME}:/usr/local/makRti
   environment:
   - DISPLAY=${DISPLAY}
   ports:
@@ -41,13 +41,16 @@ and using the following `.env` file:
 REPOSITORY=hlacontainers/
 
 # VTMaK version
-VTMAK_VERSION=4.5
+VTMAK_VERSION=skeleton
 
 # X DISPLAY for the RTI Exec (required when using the RTI Assistant)
 DISPLAY=xserver:0
 
-# Example of installation directory of the VTMaK RTI (for mount example)
-RTI_HOME=/usr/local/makRti4.5
+# Host installation directory of the VTMaK RTI (TAILOR THIS TO YOUR OWN ENVIRONMENT)
+# For example:
+# - on Linux: VTMAK_RTI_HOME=/usr/local/makRti4.5
+# - on Windows: VTMAK_RTI_HOME=C:\MAK\makRti4.5
+VTMAK_RTI_HOME=/usr/local/makRti4.5
 ````
 
 The environment file should be used to tailor the composition to the local infrastructure, such as the address of the X Server, or the installation directory of the VTMaK RTI,
@@ -56,7 +59,7 @@ Port 4000 is the default port on which the RTI Executive listens and port 5000 i
 
 By default the RTI Assistant is enabled. Therefore an X Display is required.
 
-Also note the text about the Qt files under `${RTI_HOME}/lib/gui`. The Qt files shipped with the RTI do work in the container image. As work-around the Qt files must be removed in order to force the RTI Executive to use the latest Qt version that is installed in the container image. More information can be found in the build instructions and Dockerfile.
+Also note the text about the Qt files under `${VTMAK_RTI_HOME}/lib/gui`. The Qt files shipped with the RTI do work in the container image. As work-around the Qt files must be removed in order to force the RTI Executive to use the latest Qt version that is installed in the container image. More information can be found in the build instructions and Dockerfile.
 
 ## Container synopsis
 

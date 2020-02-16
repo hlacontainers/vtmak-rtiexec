@@ -6,10 +6,15 @@ services:
   ports:
   - "8080:8080"
  
+# Make sure to delete the Qt files from ${VTMAK_RTI_HOME}/lib/gui (see Dockerfile)
+
  rtiexec:
   image: ${REPOSITORY}vtmak-rtiexec:${VTMAK_VERSION}
+  volumes:
+  - ${VTMAK_RTI_HOME}:/usr/local/makRti
   environment:
   - DISPLAY=${DISPLAY}
   ports:
   - "4000:4000"
   - "5000:5000"
+  
