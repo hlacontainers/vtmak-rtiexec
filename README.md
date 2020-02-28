@@ -1,16 +1,11 @@
 # VTMaK RTI Executive image
 The VTMaK RTI Executive (rtiexec) is an application that manages one or more federation executions within the VTMaK RTI. For example, it keeps track of joined federates and maintains information about the publication and subscription interests of individual federates. The RTI Executive is a required application when using the VTMaK RTI.
 
-This repository contains the files and instructions to build and run a Docker container image for the VT MaK RTI Executive. **This repository does not include any VTMaK files**. The VTMaK RTI installer and license keys must be acquired from the vendor. A free version of the VTMaK RTI for two federates can be downloaded from the vendor website. For more information about the VTMaK RTI, see https://www.mak.com.
+This repository contains the files and instructions to build and run a Docker container image for the VT MaK RTI Executive. The VTMaK RTI installer is included in this repository, but license keys to use more than two federates must be acquired from the vendor. For more information about the VTMaK RTI, see https://www.mak.com.
 
-By default a **skeleton** Docker container image is built from the files in this repository. A skeleton container image does not include any VTMaK proprietary files. These files must be mounted into the RTI Executive container at run-time in order to create a functional RTI Executive container.
+For the instructions to build a VTMaK RTI Executive container image see [BUILDME](BUILDME.md).
 
-For the instructions to build a skeleton or a complete VTMaK RTI Executive container image see [BUILDME](BUILDME.md).
-
-The simplest way to start the VTMaK RTI Executive container is with the following `docker-compose.yml` file,  where in this example:
-
-- The VTMaK RTI Executive container image is a skeleton image. 
-- The VTMaK RTI is installed on the host file system under the directory `${VTMAK_RTI_HOME}`.
+The simplest way to start the VTMaK RTI Executive container is with the following `docker-compose.yml` file:
 
 ````
 version: '3'
@@ -21,12 +16,8 @@ services:
   ports:
   - "8080:8080"
  
-# Make sure to delete the Qt files from ${VTMAK_RTI_HOME}/lib/gui (see Dockerfile)
-
  rtiexec:
   image: ${REPOSITORY}vtmak-rtiexec:${VTMAK_VERSION}
-  volumes:
-  - ${VTMAK_RTI_HOME}:/usr/local/makRti
   environment:
   - DISPLAY=${DISPLAY}
   ports:
@@ -41,25 +32,17 @@ and using the following `.env` file:
 REPOSITORY=hlacontainers/
 
 # VTMaK version
-VTMAK_VERSION=skeleton
+VTMAK_VERSION=4.5
 
 # X DISPLAY for the RTI Exec (required when using the RTI Assistant)
 DISPLAY=xserver:0
-
-# Host installation directory of the VTMaK RTI (TAILOR THIS TO YOUR OWN ENVIRONMENT)
-# For example:
-# - on Linux: VTMAK_RTI_HOME=/usr/local/makRti4.5
-# - on Windows: VTMAK_RTI_HOME=C:\MAK\makRti4.5
-VTMAK_RTI_HOME=/usr/local/makRti4.5
 ````
 
-The environment file should be used to tailor the composition to the local infrastructure, such as the address of the X Server, or the installation directory of the VTMaK RTI,
+The environment file should be used to tailor the composition to the local infrastructure, such as the address of the X Server.
 
 Port 4000 is the default port on which the RTI Executive listens and port 5000 is the default port on which the Forwarder listens for connection requests from a Local RTI Component (LRC).
 
 By default the RTI Assistant is enabled. Therefore an X Display is required.
-
-Also note the text about the Qt files under `${VTMAK_RTI_HOME}/lib/gui`. The Qt files shipped with the RTI do work in the container image. As work-around the Qt files must be removed in order to force the RTI Executive to use the latest Qt version that is installed in the container image. More information can be found in the build instructions and Dockerfile.
 
 ## Container synopsis
 
