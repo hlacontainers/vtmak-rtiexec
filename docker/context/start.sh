@@ -132,10 +132,7 @@ if [ -n "$MAK_RTI_USE_32BITS_FOR_VALUE_SIZE" ]; then
 	sed -i "s/(setqb RTI_use32BitsForValueSize.*/(setqb RTI_use32BitsForValueSize $MAK_RTI_USE_32BITS_FOR_VALUE_SIZE)/" $RTI_RID_FILE
 fi
 
-# Determine commandline options for logging
-OTHER_OPTS=
 if [ -n "$MAK_RTI_NOTIFY_LEVEL" ]; then
-	OTHER_OPTS=$OTHER_OPTS -n $MAK_LOG_LEVEL
 	sed -i "s/.*(setqb RTI_notifyLevel.*/(setqb RTI_notifyLevel $MAK_RTI_NOTIFY_LEVEL)/" $RTI_RID_FILE
 fi
 
@@ -144,7 +141,6 @@ if [ -n "$MAK_RTI_LOG_FILE_DIRECTORY" ]; then
 fi
 
 if [ -n "$MAK_RTI_RTIEXEC_LOG_FILE_NAME" ]; then
-	OTHER_OPTS=$OTHER_OPTS -l $MAK_RTIEXEC_LOGFILE
 	sed -i "s:.*(setqb RTI_rtiExecLogFileName.*):(setqb RTI_rtiExecLogFileName \"$MAK_RTI_RTIEXEC_LOG_FILE_NAME\"):" $RTI_RID_FILE
 fi
 
