@@ -42,7 +42,7 @@ RUN dbus-uuidgen > /var/lib/dbus/machine-id
 # However, no guarentees this will work fully.
 
 RUN yum install -y \
-	mesa-libGLU \
+	mesa-libGLU mesa-libEGL \
 	libicu \
 	xorg-x11-server-utils \
 	xkeyboard-config \
