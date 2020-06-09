@@ -19,8 +19,14 @@ ENV RTI_HOME=/usr/local/makRti${VTMAK_VERSION}
 # Install Mak RTI
 ADD ./makRti${VTMAK_VERSION}-linux64-rhe7.tar.gz /usr/local
 
-# Brute force, remove non-working Qt libs
+# Install Qt 5.6.3
+ENV QTDIR=/opt/qt/5.6.3
+COPY ./qt-5.6.3-mak-linux-rhentws7-64bit.sh /tmp
+RUN echo ${QTDIR} | sh /tmp/qt-5.6.3-mak-linux-rhentws7-64bit.sh
 RUN rm -rf ${RTI_HOME}/lib/gui/libQ*
+RUN rm -rf ${RTI_HOME}/bin/gui/qplugins
+RUN cp -r ${QTDIR}/plugins/ ${RTI_HOME}/bin/gui/qplugins
+RUN cp -r ${QTDIR}/lib/* ${RTI_HOME}/lib/gui
 
 # Ensure there is a skeleton structure
 RUN mkdir -p ${RTI_HOME}/bin ${RTI_HOME}/lib ${RTI_HOME}/data ${RTI_HOME}/include
@@ -36,19 +42,12 @@ ARG VTMAK_VERSION
 # Workaround issue with DBUS
 RUN dbus-uuidgen > /var/lib/dbus/machine-id
 
-# The official MaK Qt package (5.5.1b for this RTI) does not work for CentOS.
-# There is a NPE, and Qt 5.5.1 appears fairly outdated -- no packages appear available for yum.
-# As workaround we use the lastest Qt-base development, with other packages we need.
-# However, no guarentees this will work fully.
-
 RUN yum install -y \
-	mesa-libGLU mesa-libEGL \
+	mesa-libGLU mesa-libEGL mesa-dri-drivers mesa-filesystem mesa-libGLES mesa-libGLw mesa-libOSMesa \
 	libicu \
 	xorg-x11-server-utils \
+	libpng freetype fontconfig \
 	xkeyboard-config \
-	qt5-qtbase-devel \
-	qt5-qtimageformats \
-	qt5-qtsvg \
 	nc iproute \
 	python-setuptools
 	
@@ -66,7 +65,7 @@ COPY --from=base $RTI_HOME_FROM/include/	$RTI_HOME/include/
 COPY --from=base $RTI_HOME_FROM/rid.mtl		$RTI_HOME/rid.mtl
 
 # Set library path in case we want to start the rtiexec from the assistant
-ENV LD_LIBRARY_PATH=${RTI_HOME}/lib
+ENV LD_LIBRARY_PATH=${RTI_HOME}/lib:${RTI_HOME}/lib/gui
 
 # Set RID file
 ENV RTI_RID_FILE=$RTI_HOME/rid.mtl

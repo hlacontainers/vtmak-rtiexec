@@ -33,10 +33,3 @@ The name of the resulting image is:
 ````
 hlacontainers/vtmak-rtiexec:<version>
 ````
-
-## Notice for the RTI Assistant
-
-VTMaK RTI version 4.5 requires Qt version 5.5.1b (available from MaK site). However, upon execution there is a Null Pointer Exception (NPE) in Qt. No alternate Qt package for 5.5.x is available from yum. As workaround we delete the Qt files under `${VTMAK_RTI_HOME}/lib/gui` and use the latest Qt-base development package, with some other packages that are needed. As far as can be determined this works, except for the display of the Network Map.
-
-Qt 5.5.1 is fairly old and we hope that a newer RTI version will use a more recent Qt version.
-
