@@ -25,8 +25,8 @@ COPY ./qt-5.6.3-mak-linux-rhentws7-64bit.sh /tmp
 RUN echo ${QTDIR} | sh /tmp/qt-5.6.3-mak-linux-rhentws7-64bit.sh
 RUN rm -rf ${RTI_HOME}/lib/gui/libQ*
 RUN rm -rf ${RTI_HOME}/bin/gui/qplugins
-RUN cp -r ${QTDIR}/plugins/ ${RTI_HOME}/bin/gui/qplugins
-RUN cp -r ${QTDIR}/lib/* ${RTI_HOME}/lib/gui
+RUN if [ -d "$RTI_HOME" ]; then cp -r ${QTDIR}/plugins/ ${RTI_HOME}/bin/gui/qplugins; fi
+RUN if [ -d "$RTI_HOME" ]; then cp -r ${QTDIR}/lib/* ${RTI_HOME}/lib/gui; fi
 
 # Ensure there is a skeleton structure
 RUN mkdir -p ${RTI_HOME}/bin ${RTI_HOME}/lib ${RTI_HOME}/data ${RTI_HOME}/include
