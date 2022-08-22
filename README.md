@@ -1,6 +1,3 @@
-![Build Status](https://img.shields.io/docker/cloud/build/hlacontainers/vtmak-rtiexec)
-![Pull](https://img.shields.io/docker/pulls/hlacontainers/vtmak-rtiexec)
-
 # VTMaK RTI Executive image
 The VTMaK RTI Executive (rtiexec) is an application that manages one or more federation executions within the VTMaK RTI. For example, it keeps track of joined federates and maintains information about the publication and subscription interests of individual federates. The RTI Executive is a required application when using the VTMaK RTI.
 
