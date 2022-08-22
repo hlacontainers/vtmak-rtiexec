@@ -1,0 +1,22 @@
+stages:
+  - deploy
+
+deploy-container:
+  stage: deploy
+  image: docker:dind
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+    VTMAK_VERSION: "4.6b"
+  script:
+    - docker login -u $RUNNER_GROUP_DEPLOY_USER -p $RUNNER_GROUP_DEPLOY_TOKEN $CI_REGISTRY
+        
+    - docker build
+        -t $CI_REGISTRY_IMAGE:$VTMAK_VERSION
+        --build-arg VTMAK_VERSION=$VTMAK_VERSION
+        -f docker/context/Dockerfile docker/context
+        
+    - docker push $CI_REGISTRY_IMAGE:$VTMAK_VERSION
